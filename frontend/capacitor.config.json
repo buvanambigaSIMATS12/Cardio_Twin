@@ -1,0 +1,9 @@
+{
+  "appId": "com.cardiotwin.app",
+  "appName": "CardioTwin",
+  "webDir": "dist",
+  "server": {
+    "cleartext": true,
+    "androidScheme": "http"
+  }
+}

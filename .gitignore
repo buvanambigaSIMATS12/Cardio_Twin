@@ -1,0 +1,32 @@
+# Node.js
+node_modules/
+dist/
+build/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Data and Archives
+*.zip
+*.db
+backend/uploads/
+
+# Log and output files
+logcat.txt
+logcat_utf8.txt
+output.txt

@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+python-jose[cryptography]
+passlib[bcrypt]
+sqlalchemy
+reportlab
+groq
+python-multipart
+pillow
+numpy
+tensorflow
+xgboost
+scikit-learn
+tf-explain
+huggingface_hub
+python-dotenv
+lightgbm
