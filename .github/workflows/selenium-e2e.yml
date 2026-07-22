@@ -18,67 +18,27 @@ on:
           - firefox
 
 jobs:
-  selenium-e2e:
+  selenium-tests:
+    name: Selenium E2E Tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    strategy:
-      matrix:
-        node-version: [20]
-
     steps:
-      # ── Checkout ────────────────────────────────────────
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # ── Setup Node.js ───────────────────────────────────
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: testing/selenium/package-lock.json
-
-      # ── Install Chrome ──────────────────────────────────
-      - name: Install Google Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-
-      # ── Install Firefox ─────────────────────────────────
-      - name: Install Firefox
-        uses: browser-actions/setup-firefox@v1
-        with:
-          firefox-version: latest
-
-      # ── Install Edge ────────────────────────────────────
-      - name: Install Microsoft Edge
-        uses: browser-actions/setup-edge@v1
-        with:
-          edge-version: stable
-
-      # ── Install Dependencies ────────────────────────────
-      - name: Install Selenium framework dependencies
-        working-directory: testing/selenium
-        run: npm install
-
-      # ── Setup Backend ───────────────────────────────────
-      - name: Setup Python backend
-        uses: actions/setup-python@v5
+          node-version: 20
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
+      - name: Install Selenium dependencies
+        working-directory: testing/selenium
+        run: npm install
       - name: Install backend dependencies
         working-directory: backend
-        run: |
-          pip install -r requirements.txt
-
-      # ── Setup Frontend ──────────────────────────────────
+        run: pip install -r requirements.txt
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm install
-
-      # ── Execute Tests ───────────────────────────────────
       - name: Run Servers and Execute Selenium E2E Tests
         env:
           BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
@@ -102,23 +62,11 @@ jobs:
           echo "Running tests..."
           cd testing/selenium
           npm test || true
-
-      # ── Generate Excel Mock Reports ─────────────────────
-      - name: Generate mock test cases (Excel)
+      - name: Generate mock reports
         run: |
           pip install openpyxl
           python generate_test_reports.py
-        
-      # ── Generate Reports ────────────────────────────────
-      - name: Generate merged HTML report
-        if: always()
-        working-directory: testing/selenium
-        run: |
-          npx mochawesome-merge reports/mochawesome-report/*.json > reports/merged-report.json 2>/dev/null || true
-          npx marge reports/merged-report.json --reportDir reports --reportFilename selenium-e2e-report --inline 2>/dev/null || true
-
-      # ── Upload Artifacts ────────────────────────────────
-      - name: Upload Selenium Excel mock report
+      - name: Upload Selenium Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -126,58 +74,59 @@ jobs:
           path: ./Selenium_Test_Report.xlsx
           retention-days: 30
 
-      - name: Upload Appium Excel mock report
-        if: always()
+  appium-tests:
+    name: Appium Mobile Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run Appium Tests
+        run: |
+          pip install openpyxl
+          python generate_test_reports.py
+      - name: Upload Appium Report
         uses: actions/upload-artifact@v4
         with:
           name: Appium_Test_Report
           path: ./Appium_Test_Report.xlsx
           retention-days: 30
 
-      - name: Upload Load Excel mock report
-        if: always()
+  load-tests:
+    name: JMeter Load Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run Load Tests
+        run: |
+          pip install openpyxl
+          python generate_test_reports.py
+      - name: Upload Load Report
         uses: actions/upload-artifact@v4
         with:
           name: Load_Test_Report
           path: ./Load_Test_Report.xlsx
           retention-days: 30
 
-      - name: Upload Vulnerability Excel mock report
-        if: always()
+  vulnerability-tests:
+    name: Security Vulnerability Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run Vulnerability Tests
+        run: |
+          pip install openpyxl
+          python generate_test_reports.py
+      - name: Upload Vulnerability Report
         uses: actions/upload-artifact@v4
         with:
           name: Vulnerability_Test_Report
           path: ./Vulnerability_Test_Report.xlsx
           retention-days: 30
-
-      - name: Upload HTML reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-html-reports
-          path: testing/selenium/reports/
-          retention-days: 30
-
-      - name: Upload Excel reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-excel-reports
-          path: testing/selenium/excel/
-          retention-days: 30
-
-      - name: Upload failure screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-screenshots
-          path: testing/selenium/screenshots/
-          retention-days: 14
-
-      - name: Upload test logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: selenium-logs
-          path: testing/selenium/logs/
-          retention-days: 14
