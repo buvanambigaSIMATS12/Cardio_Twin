@@ -118,12 +118,36 @@ jobs:
           npx marge reports/merged-report.json --reportDir reports --reportFilename selenium-e2e-report --inline 2>/dev/null || true
 
       # ── Upload Artifacts ────────────────────────────────
-      - name: Upload mock excel test cases
+      - name: Upload Selenium Excel mock report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mock-excel-reports
-          path: ./*_Test_Report.xlsx
+          name: Selenium_Test_Report
+          path: ./Selenium_Test_Report.xlsx
+          retention-days: 30
+
+      - name: Upload Appium Excel mock report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Appium_Test_Report
+          path: ./Appium_Test_Report.xlsx
+          retention-days: 30
+
+      - name: Upload Load Excel mock report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Load_Test_Report
+          path: ./Load_Test_Report.xlsx
+          retention-days: 30
+
+      - name: Upload Vulnerability Excel mock report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vulnerability_Test_Report
+          path: ./Vulnerability_Test_Report.xlsx
           retention-days: 30
 
       - name: Upload HTML reports
