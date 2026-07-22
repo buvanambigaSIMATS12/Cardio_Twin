@@ -1,0 +1,14 @@
+spec: "tests/**/*.test.js"
+timeout: 60000
+reporter: mochawesome
+reporter-options:
+  - reportDir=reports/mochawesome-report
+  - reportFilename=selenium-e2e
+  - overwrite=false
+  - json=true
+  - html=true
+  - charts=true
+  - timestamp=true
+retries: 1
+slow: 10000
+exit: true

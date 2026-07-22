@@ -1,0 +1,45 @@
+{
+  "validUser": {
+    "email": "buvanambigasaravana@gmail.com",
+    "password": "122830"
+  },
+  "invalidUser": {
+    "email": "invalid_user@notexist.com",
+    "password": "wrongpassword123"
+  },
+  "registerUser": {
+    "full_name": "Selenium Test User",
+    "age": 28,
+    "gender": "Male",
+    "email": "selenium_test_{{timestamp}}@test.com",
+    "password": "SeleniumTest@123",
+    "confirm_password": "SeleniumTest@123"
+  },
+  "registerPasswordMismatch": {
+    "full_name": "Mismatch User",
+    "age": 25,
+    "gender": "Female",
+    "email": "mismatch@test.com",
+    "password": "Password@123",
+    "confirm_password": "DifferentPassword@456"
+  },
+  "medication": {
+    "name": "TestMedication",
+    "dosage": "10mg",
+    "frequency": "Once daily"
+  },
+  "searchTerms": {
+    "doctor": "Cardiology",
+    "empty": "zzzznonexistent"
+  },
+  "sidebarPages": [
+    { "name": "Dashboard", "route": "/" },
+    { "name": "ECG", "route": "/ecg" },
+    { "name": "Digital Twin", "route": "/twin" },
+    { "name": "Medications", "route": "/medications" },
+    { "name": "History", "route": "/history" },
+    { "name": "Doctors", "route": "/doctors" },
+    { "name": "Profile", "route": "/profile" },
+    { "name": "Settings", "route": "/settings" }
+  ]
+}
