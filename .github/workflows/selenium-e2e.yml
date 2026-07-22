@@ -73,31 +73,34 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Start backend server
-        working-directory: backend
-        run: |
-          python -m uvicorn main:app --host 0.0.0.0 --port 8000 &
-          sleep 5
-
       # ── Setup Frontend ──────────────────────────────────
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm install
 
-      - name: Start frontend dev server
-        working-directory: frontend
-        run: |
-          npm run dev -- --host 0.0.0.0 &
-          sleep 10
-
       # ── Execute Tests ───────────────────────────────────
-      - name: Run Selenium E2E tests
-        working-directory: testing/selenium
+      - name: Run Servers and Execute Selenium E2E Tests
         env:
           BROWSER: ${{ github.event.inputs.browser || 'chrome' }}
           HEADLESS: 'true'
           TEST_ENV: ci
-        run: npm test
+        run: |
+          echo "Starting backend..."
+          cd backend
+          python -m uvicorn main:app --host 0.0.0.0 --port 8000 &
+          cd ..
+          
+          echo "Starting frontend..."
+          cd frontend
+          npm run dev -- --host 0.0.0.0 &
+          cd ..
+          
+          echo "Waiting for servers to initialize..."
+          sleep 15
+          
+          echo "Running tests..."
+          cd testing/selenium
+          npm test
 
       # ── Generate Excel Mock Reports ─────────────────────
       - name: Generate mock test cases (Excel)
