@@ -24,8 +24,6 @@
   },
   "dependencies": {
     "selenium-webdriver": "^4.27.0",
-    "chromedriver": "^131.0.0",
-    "geckodriver": "^4.5.1",
     "mocha": "^11.1.0",
     "chai": "^4.5.0",
     "mochawesome": "^7.1.3",
